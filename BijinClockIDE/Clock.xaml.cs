@@ -27,9 +27,11 @@ namespace BijinClockIDE
 			this.Unloaded += Clock_Unloaded;
 		}
 
-		Setting _setting;
-		Random _r = new Random();
+		readonly Setting _setting;
+		readonly Random _r = new Random();
 		DispatcherTimer _timer;
+		DateTime _lastRequestTime = DateTime.MinValue;
+
 		void Clock_Loaded(object sender, RoutedEventArgs e)
 		{
 			this.Loaded -= Clock_Loaded;
@@ -37,15 +39,11 @@ namespace BijinClockIDE
 			if (_timer == null)
 			{
 				_timer = new DispatcherTimer();
-#if DEBUG
 				_timer.Interval = TimeSpan.FromSeconds(5);
-#else
-				_timer.Interval = TimeSpan.FromSeconds(60);
-#endif
-				_timer.Tick += timer_Tick;
-				_timer.Start();
 				timer_Tick(null, null);
 			}
+			_timer.Tick += timer_Tick;
+			_timer.Start();
 		}
 
 		void Clock_Unloaded(object sender, RoutedEventArgs e)
@@ -55,21 +53,22 @@ namespace BijinClockIDE
 				if (_timer == null) return;
 				_timer.Tick -= timer_Tick;
 				_timer.Stop();
-				_timer = null;
 				this.Loaded += Clock_Loaded;
 			}
 			catch { }
 		}
 
 		int _currentIndex = 0;
-		Image[] _imageControls;
-		DoubleAnimation FadeOutAnimation = new DoubleAnimation()
+		readonly Image[] _imageControls;
+
+		readonly DoubleAnimation _fadeOutAnimation = new DoubleAnimation()
 		{
 			From = 1,
 			To = 0,
 			Duration = TimeSpan.FromSeconds(2),
 		};
-		DoubleAnimation FadeInAnimation = new DoubleAnimation()
+
+		readonly DoubleAnimation _fadeInAnimation = new DoubleAnimation()
 		{
 			From = 0,
 			To = 1,
@@ -78,12 +77,17 @@ namespace BijinClockIDE
 
 		async void timer_Tick(object sender, EventArgs e)
 		{
+			var requestTime = DateTime.Now;
+			requestTime = new DateTime(requestTime.Year, requestTime.Month, requestTime.Day, requestTime.Hour, requestTime.Minute, 0);
+			if (requestTime == _lastRequestTime) return;
+			_lastRequestTime = requestTime;
+			System.Diagnostics.Debug.WriteLine("timer");
 			var url = _setting.Source[_r.Next(_setting.Source.Count)];
 			try
 			{
 				using (var client = new HttpClient())
 				{
-					var buffer = await client.GetByteArrayAsync(String.Format(url, DateTime.Now));
+					var buffer = await client.GetByteArrayAsync(String.Format(url, requestTime));
 					var bitmapImage = new BitmapImage();
 
 					using (var stream = new MemoryStream(buffer))
@@ -99,8 +103,8 @@ namespace BijinClockIDE
 					{
 						var next = (_currentIndex + 1) % 2;
 						_imageControls[next].Source = bitmapImage;
-						_imageControls[_currentIndex].BeginAnimation(Control.OpacityProperty, FadeOutAnimation);
-						_imageControls[next].BeginAnimation(Control.OpacityProperty, FadeInAnimation);
+						_imageControls[_currentIndex].BeginAnimation(OpacityProperty, this._fadeOutAnimation);
+						_imageControls[next].BeginAnimation(OpacityProperty, this._fadeInAnimation);
 						_currentIndex = next;
 					}));
 				}
