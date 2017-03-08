@@ -86,7 +86,6 @@ namespace BijinClockIDE
 			requestTime = new DateTime(requestTime.Year, requestTime.Month, requestTime.Day, requestTime.Hour, requestTime.Minute, 0);
 			if (requestTime == _lastRequestTime) return;
 			_lastRequestTime = requestTime;
-			Log("timer");
 			var url = _setting.Source[_r.Next(_setting.Source.Count)];
 			try
 			{
@@ -95,7 +94,6 @@ namespace BijinClockIDE
 					var files = Directory.GetFiles(_targetFolder, $"{_lastRequestTime:HHmm}_*.png");
 					if (files.Length <= 0) return;
 
-					Log("create image");
 					var targetFile = files[_r.Next(files.Length)];
 
 					var bitmapImage = new BitmapImage();
@@ -108,15 +106,11 @@ namespace BijinClockIDE
 						if (bitmapImage.CanFreeze) bitmapImage.Freeze();
 					}
 
-					Log("swap start");
-
 					var next = (_currentIndex + 1) % 2;
 					_imageControls[next].Source = bitmapImage;
 					_imageControls[_currentIndex].BeginAnimation(OpacityProperty, this._fadeOutAnimation);
 					_imageControls[next].BeginAnimation(OpacityProperty, this._fadeInAnimation);
 					_currentIndex = next;
-
-					Log("swap end");
 				}));
 			}
 			catch (Exception exp)
@@ -127,7 +121,5 @@ namespace BijinClockIDE
 
 
 		Guid _id = Guid.NewGuid();
-		HdLog46.Logger _logger = new HdLog46.Logger("BijinClockIde");
-		void Log(string log) => this._logger.Information($"{_id} {log}");
 	}
 }
