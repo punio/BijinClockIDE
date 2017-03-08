@@ -14,9 +14,11 @@ namespace BijinClockIDE
 	/// </summary>
 	public partial class Clock : UserControl
 	{
-		public Clock(Setting setting)
+		public Clock(string path, Setting setting)
 		{
+			System.Diagnostics.Debug.WriteLine("Clock");
 			InitializeComponent();
+			_targetFolder = path;
 			_setting = setting;
 			if (_setting.Source.Count <= 0) return;
 
@@ -27,6 +29,7 @@ namespace BijinClockIDE
 			this.Unloaded += Clock_Unloaded;
 		}
 
+		readonly string _targetFolder;
 		readonly Setting _setting;
 		readonly Random _r = new Random();
 		DispatcherTimer _timer;
@@ -34,13 +37,14 @@ namespace BijinClockIDE
 
 		void Clock_Loaded(object sender, RoutedEventArgs e)
 		{
+			System.Diagnostics.Debug.WriteLine("Clock_Loaded");
 			this.Loaded -= Clock_Loaded;
 
 			if (_timer == null)
 			{
 				_timer = new DispatcherTimer();
 				_timer.Interval = TimeSpan.FromSeconds(5);
-				timer_Tick(null, null);
+				//timer_Tick(null, null);
 			}
 			_timer.Tick += timer_Tick;
 			_timer.Start();
@@ -48,6 +52,7 @@ namespace BijinClockIDE
 
 		void Clock_Unloaded(object sender, RoutedEventArgs e)
 		{
+			System.Diagnostics.Debug.WriteLine("Clock_Unloaded");
 			try
 			{
 				if (_timer == null) return;
@@ -81,38 +86,48 @@ namespace BijinClockIDE
 			requestTime = new DateTime(requestTime.Year, requestTime.Month, requestTime.Day, requestTime.Hour, requestTime.Minute, 0);
 			if (requestTime == _lastRequestTime) return;
 			_lastRequestTime = requestTime;
-			System.Diagnostics.Debug.WriteLine("timer");
+			Log("timer");
 			var url = _setting.Source[_r.Next(_setting.Source.Count)];
 			try
 			{
-				using (var client = new HttpClient())
+				await Dispatcher.BeginInvoke((Action)(() =>
 				{
-					var buffer = await client.GetByteArrayAsync(String.Format(url, requestTime));
-					var bitmapImage = new BitmapImage();
+					var files = Directory.GetFiles(_targetFolder, $"{_lastRequestTime:HHmm}_*.png");
+					if (files.Length <= 0) return;
 
-					using (var stream = new MemoryStream(buffer))
+					Log("create image");
+					var targetFile = files[_r.Next(files.Length)];
+
+					var bitmapImage = new BitmapImage();
+					using (var stream = new WrappingStream(new MemoryStream(File.ReadAllBytes(targetFile))))
 					{
 						bitmapImage.BeginInit();
 						bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
 						bitmapImage.StreamSource = stream;
 						bitmapImage.EndInit();
-						bitmapImage.Freeze();
+						if (bitmapImage.CanFreeze) bitmapImage.Freeze();
 					}
 
-					await Dispatcher.BeginInvoke((Action)(() =>
-					{
-						var next = (_currentIndex + 1) % 2;
-						_imageControls[next].Source = bitmapImage;
-						_imageControls[_currentIndex].BeginAnimation(OpacityProperty, this._fadeOutAnimation);
-						_imageControls[next].BeginAnimation(OpacityProperty, this._fadeInAnimation);
-						_currentIndex = next;
-					}));
-				}
+					Log("swap start");
+
+					var next = (_currentIndex + 1) % 2;
+					_imageControls[next].Source = bitmapImage;
+					_imageControls[_currentIndex].BeginAnimation(OpacityProperty, this._fadeOutAnimation);
+					_imageControls[next].BeginAnimation(OpacityProperty, this._fadeInAnimation);
+					_currentIndex = next;
+
+					Log("swap end");
+				}));
 			}
 			catch (Exception exp)
 			{
 				System.Diagnostics.Debug.WriteLine("!!!! {0} / {1}", url, exp.Message);
 			}
 		}
+
+
+		Guid _id = Guid.NewGuid();
+		HdLog46.Logger _logger = new HdLog46.Logger("BijinClockIde");
+		void Log(string log) => this._logger.Information($"{_id} {log}");
 	}
 }

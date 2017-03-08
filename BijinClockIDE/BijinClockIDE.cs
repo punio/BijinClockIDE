@@ -11,11 +11,68 @@ namespace BijinClockIDE
 	/// </summary>
 	class BijinClockIDE
 	{
+		static BijinClockIDE()
+		{
+			try
+			{
+				_assemblylocation = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+				var settinFilePath = Path.Combine(string.IsNullOrEmpty(_assemblylocation) ? "" : _assemblylocation, "Setting.xml");
+				if (File.Exists(settinFilePath))
+				{
+					using (var sr = new StreamReader(settinFilePath))
+					{
+						var serializer = new XmlSerializer(typeof(Setting));
+						_setting = (Setting)serializer.Deserialize(sr);
+					}
+				}
+				if (_setting == null)
+				{
+					#region Default
+					_setting = new Setting();
+					_setting.Alignment = Setting.ContentAlignment.TopRight;
+					_setting.Margin = new System.Windows.Thickness(10);
+					_setting.Width = 250;
+					_setting.Height = 250;
+					_setting.Opacity = 0.3;
+					_setting.Source.Add("http://www.bijint.com/assets/pict/sara/pc/{0:HHmm}.jpg");
+					_setting.Source.Add("http://www.bijint.com/assets/pict/wasedastyle/pc/{0:HHmm}.jpg");
+					_setting.Source.Add("http://www.bijint.com/assets/pict/hairstyle/pc/{0:HHmm}.jpg");
+					_setting.Source.Add("http://www.bijint.com/assets/pict/megane/pc/{0:HHmm}.jpg");
+					_setting.Source.Add("http://www.bijint.com/assets/pict/tokyo/pc/{0:HHmm}.jpg");
+					_setting.Source.Add("http://www.bijint.com/assets/pict/yamanashi/pc/{0:HHmm}.jpg");
+					_setting.Source.Add("http://www.bijint.com/assets/pict/nara/pc/{0:HHmm}.jpg");
+					_setting.Source.Add("http://www.bijint.com/assets/pict/chiba/pc/{0:HHmm}.jpg");
+					_setting.Source.Add("http://www.bijint.com/assets/pict/tottori/pc/{0:HHmm}.jpg");
+					_setting.Source.Add("http://www.bijint.com/assets/pict/kagawa/pc/{0:HHmm}.jpg");
+					_setting.Source.Add("http://www.bijint.com/assets/pict/kyoto/pc/{0:HHmm}.jpg");
+					_setting.Source.Add("http://www.bijint.com/assets/pict/iwate/pc/{0:HHmm}.jpg");
+					_setting.Source.Add("http://www.bijint.com/assets/pict/kanagawa/pc/{0:HHmm}.jpg");
+					_setting.Source.Add("http://www.bijint.com/assets/pict/kumamoto/pc/{0:HHmm}.jpg");
+					_setting.Source.Add("http://www.bijint.com/assets/pict/hiroshima/pc/{0:HHmm}.jpg");
+					_setting.Source.Add("http://www.bijint.com/assets/pict/okinawa/pc/{0:HHmm}.jpg");
+					_setting.Source.Add("http://www.bijint.com/assets/pict/osaka/pc/{0:HHmm}.jpg");
+					_setting.Source.Add("http://www.bijint.com/assets/pict/sendai/pc/{0:HHmm}.jpg");
+					_setting.Source.Add("http://www.bijint.com/assets/pict/cc/pc/{0:HHmm}.jpg");
+					using (var sw = new StreamWriter(settinFilePath))
+					{
+						var serializer = new XmlSerializer(typeof(Setting));
+						serializer.Serialize(sw, _setting);
+					}
+					#endregion
+				}
+
+				_collector = new ImageCollector(_assemblylocation, _setting);
+			}
+			catch { }
+		}
+
+
 		private Clock _clock;
 		private IWpfTextView _view;
 		private IAdornmentLayer _adornmentLayer;
-		private Setting _setting;
-
+		private static Setting _setting;
+		private static ImageCollector _collector;
+		private static string _assemblylocation;
 		/// <summary>
 		/// Creates a square image and attaches an event handler to the layout changed event that
 		/// adds the the square in the upper right-hand corner of the TextView via the adornment layer
@@ -73,7 +130,7 @@ namespace BijinClockIDE
 					#endregion
 				}
 
-				_clock = new Clock(_setting) { Opacity = _setting.Opacity };
+				_clock = new Clock(_assemblylocation, _setting) { Opacity = _setting.Opacity };
 			}
 			catch { }
 
