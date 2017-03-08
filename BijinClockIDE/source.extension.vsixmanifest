@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="BijinClockIDE..9ca48cce-5d78-4519-95f1-32c7471ab248" Version="1.4.1" Language="ja-JP" Publisher="PUNIO" />
+        <Identity Id="BijinClockIDE..9ca48cce-5d78-4519-95f1-32c7471ab249" Version="1.4.2" Language="ja-JP" Publisher="PUNIO" />
         <DisplayName>美人時計 IDE</DisplayName>
         <Description xml:space="preserve">毎日10時間以上もIDE見てるとさすがに飽きるよね。そんな時に美人な（？）女の子が時間教えてくれてたら少しだけ頑張れると思いませんか？</Description>
         <License>TextFile1.txt</License>
@@ -9,7 +9,7 @@
         <PreviewImage>Preview.PNG</PreviewImage>
     </Metadata>
     <Installation>
-        <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[12.0,14.0]" />
+        <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[15.0,15.0]" />
     </Installation>
     <Dependencies>
         <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="4.5" />
@@ -17,4 +17,7 @@
     <Assets>
         <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%|" />
     </Assets>
+    <Prerequisites>
+        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0.26208.0,16.0)" DisplayName="Visual Studio のコア エディター" />
+    </Prerequisites>
 </PackageManifest>

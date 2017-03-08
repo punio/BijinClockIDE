@@ -34,8 +34,6 @@ namespace BijinClockIDE
 			if (requestTime == _lastRequestTime) return;
 			_lastRequestTime = requestTime;
 
-			Log("timer");
-
 			var mutex = new Mutex(false, @"Global\BijinClockIde");
 			if (!mutex.WaitOne(100))
 			{
@@ -53,17 +51,14 @@ namespace BijinClockIDE
 				{
 					using (var client = new HttpClient())
 					{
-						Log("begin load");
 						var task = client.GetByteArrayAsync(string.Format(_setting.Source[i], requestTime));
 						task.Wait();
 						var buffer = task.Result;
-						Log("save");
 						File.WriteAllBytes(fileName, buffer);
 					}
 				}
 				catch (Exception exp)
 				{
-					Log($"Download error.{exp.Message}");
 				}
 			}
 			#endregion
@@ -82,7 +77,6 @@ namespace BijinClockIDE
 			}
 			catch (Exception exp)
 			{
-				Log($"Delete error.{exp.Message}");
 			}
 			#endregion
 
@@ -91,7 +85,5 @@ namespace BijinClockIDE
 		}
 
 		readonly Guid _id = Guid.NewGuid();
-		readonly HdLog46.Logger _logger = new HdLog46.Logger("BijinClockIde");
-		void Log(string log) => this._logger.Information($"{_id} {log}");
 	}
 }
