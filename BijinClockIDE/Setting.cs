@@ -46,12 +46,13 @@ namespace BijinClockIDE {
 			//     コンテンツは下端右寄せに配置されます。
 			BottomRight = 1024,
 		}
-		public Thickness Margin;
-		public ContentAlignment Alignment;
-		public double? Width;
-		public double? Height;
-		public double Opacity;
-		public List<string> Source;
+
+		public Thickness Margin { get; set; }
+		public ContentAlignment Alignment { get; set; }
+		public double? Width { get; set; }
+		public double? Height { get; set; }
+		public double Opacity { get; set; }
+		public List<string> Source { get; set; }
 
 		public Setting() {
 			Source = new List<string>();
