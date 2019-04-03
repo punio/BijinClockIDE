@@ -37,7 +37,6 @@ namespace BijinClockIDE
 					_setting.Source.Add("http://www.bijint.com/assets/pict/sendai/pc/{0:HHmm}.jpg");
 					_setting.Source.Add("http://www.bijint.com/assets/pict/kanazawa/pc/{0:HHmm}.jpg");
 					_setting.Source.Add("http://www.bijint.com/assets/pict/kagawa/pc/{0:HHmm}.jpg");
-					_setting.Source.Add("http://www.bijint.com/assets/pict/iwate/pc/{0:HHmm}.jpg");
 					_setting.Source.Add("http://www.bijint.com/assets/pict/nagoya/pc/{0:HHmm}.jpg");
 					_setting.Source.Add("http://www.bijint.com/assets/pict/okinawa/pc/{0:HHmm}.jpg");
 					_setting.Source.Add("http://www.bijint.com/assets/pict/saitama/pc/{0:HHmm}.jpg");
@@ -46,7 +45,6 @@ namespace BijinClockIDE
 					_setting.Source.Add("http://www.bijint.com/assets/pict/kagoshima/pc/{0:HHmm}.jpg");
 					_setting.Source.Add("http://www.bijint.com/assets/pict/okayama/pc/{0:HHmm}.jpg");
 					_setting.Source.Add("http://www.bijint.com/assets/pict/aomori/pc/{0:HHmm}.jpg");
-					_setting.Source.Add("http://www.bijint.com/assets/pict/hiroshima/pc/{0:HHmm}.jpg");
 					_setting.Source.Add("http://www.bijint.com/assets/pict/nara/pc/{0:HHmm}.jpg");
 					_setting.Source.Add("http://www.bijint.com/assets/pict/fukushima/pc/{0:HHmm}.jpg");
 					using (var sw = new StreamWriter(settinFilePath))

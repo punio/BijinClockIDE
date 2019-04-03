@@ -1,9 +1,9 @@
 # BijinClockIDE
 
-IDE extension for Visual Studio 2013/2015 -> 2017
+IDE extension for Visual Studio 2013/2015 -> 2017/2019
 
 ## Install
-2017
+2017/2019
 [https://marketplace.visualstudio.com/items?itemName=puni.IDE-18376](https://marketplace.visualstudio.com/items?itemName=puni.IDE-18376)
 
 2013/2015
