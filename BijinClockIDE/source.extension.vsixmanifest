@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="BijinClockIDE..9ca48cce-5d78-4519-95f1-32c7471ab249" Version="1.4.4" Language="ja-JP" Publisher="PUNIO" />
+        <Identity Id="BijinClockIDE..9ca48cce-5d78-4519-95f1-32c7471ab249" Version="1.4.5" Language="ja-JP" Publisher="PUNIO" />
         <DisplayName>美人時計 IDE</DisplayName>
         <Description xml:space="preserve">毎日10時間以上もIDE見てるとさすがに飽きるよね。そんな時に美人な（？）女の子が時間教えてくれてたら少しだけ頑張れると思いませんか？</Description>
         <License>TextFile1.txt</License>

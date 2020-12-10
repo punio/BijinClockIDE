@@ -91,7 +91,7 @@ namespace BijinClockIDE
 			{
 				await Dispatcher.BeginInvoke((Action)(() =>
 				{
-					var files = Directory.GetFiles(_targetFolder, $"{_lastRequestTime:HHmm}_*.png");
+					var files = Directory.GetFiles(_targetFolder, $"{_lastRequestTime:HHmm}_*.jpg");
 					if (files.Length <= 0) return;
 
 					var targetFile = files[_r.Next(files.Length)];

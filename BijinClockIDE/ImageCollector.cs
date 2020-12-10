@@ -34,6 +34,11 @@ namespace BijinClockIDE
 			if (requestTime == _lastRequestTime) return;
 			_lastRequestTime = requestTime;
 
+			Task.Run(() => DownloadImage(requestTime));
+		}
+
+		private void DownloadImage(DateTime requestTime)
+		{
 			var mutex = new Mutex(false, @"Global\BijinClockIde");
 			if (!mutex.WaitOne(100))
 			{
@@ -44,7 +49,7 @@ namespace BijinClockIDE
 			#region Pre Download
 			for (var i = 0; i < _setting.Source.Count; i++)
 			{
-				var fileName = Path.Combine(_targetFolder, $"{_lastRequestTime:HHmm}_{i}.png");
+				var fileName = Path.Combine(_targetFolder, $"{_lastRequestTime:HHmm}_{i}.jpg");
 				if (File.Exists(fileName)) continue;
 
 				try
@@ -69,7 +74,7 @@ namespace BijinClockIDE
 
 			try
 			{
-				foreach (var file in files.Where(file => Path.GetExtension(file.FullName).ToLower() == ".png" && ((this._lastRequestTime - file.LastAccessTime).TotalMinutes > 10)))
+				foreach (var file in files.Where(file => Path.GetExtension(file.FullName).ToLower() == ".jpg" && ((this._lastRequestTime - file.LastAccessTime).TotalMinutes > 10)))
 				{
 					if (Path.GetFileName(file.FullName).ToLower() == "preview.png") continue;
 					File.Delete(file.FullName);
@@ -83,7 +88,5 @@ namespace BijinClockIDE
 			mutex.ReleaseMutex();
 			mutex.Close();
 		}
-
-		readonly Guid _id = Guid.NewGuid();
 	}
 }
