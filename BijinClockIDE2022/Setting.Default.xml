@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Setting xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <!--このファイルはSetting.xmlの説明用です。それ以外の用途はありません-->
+    <Margin>
+        <Left>10</Left>
+        <Top>10</Top>
+        <Right>10</Right>
+        <Bottom>10</Bottom>
+    </Margin>
+    <!--System.Drawing.ContentAlignment-->
+    <Alignment>TopRight</Alignment>
+    <!--double? 指定なしはFillっぽい感じ-->
+    <Width>200</Width>
+    <!--double? 指定なしはFillっぽい感じ-->
+    <Height>200</Height>
+    <!--指定ないと透明になっちゃうかな-->
+    <Opacity>0.2</Opacity>
+    <!--入手元の一覧-->
+    <Source>
+        <string>http://~~~</string>
+    </Source>
+</Setting>
